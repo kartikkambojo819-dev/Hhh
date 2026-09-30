@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <!DOCTYPE html>
+
+<!DOCTYPE html>
+
 <html class="dark" dir="ltr" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><meta content="5yuM8g2Nf8BCOAkIbrUP2cOYdNL0hVEcUv7HKftA" name="csrf-token"/><meta content="index, follow" name="robots"/><title>Kartik Kamboj - PC Games</title><meta content="AnkerGames - Free Pre-installed PC Games" itemprop="name"/><meta content="Get free pre-installed steam games with direct download, explore a large collection of games for PC, Console and Mac" itemprop="description"/><meta content="https://ankergames.net/static/img/logo.png" itemprop="image"/><meta content="Get free pre-installed steam games with direct download, explore a large collection of games for PC, Console and Mac" name="description"/><meta content="AnkerGames - Free Pre-installed PC Games" property="og:title"/><meta content="Get free pre-installed steam games with direct download, explore a large collection of games for PC, Console and Mac" property="og:description"/><meta content="https://ankergames.net/static/img/logo.png" property="og:image"/><meta content="https://ankergames.net" property="og:url"/><meta content="en_US" property="og:locale"/><meta content="website" property="og:type"/><meta content="summary_large_image" name="twitter:card"/><meta content="AnkerGames - Free Pre-installed PC Games" name="twitter:title"/><meta content="Get free pre-installed steam games with direct download, explore a large collection of games for PC, Console and Mac" name="twitter:description"/><meta content="https://ankergames.net/static/img/logo.png" name="twitter:image"/><link href="https://ankergames.net" rel="canonical"/><link as="image" fetchpriority="high" href="https://ankergames.net/uploads/poster/09-2026/slide-BO9H6WQuhA.jpg" media="(min-width: 1024px)" rel="preload" type="image/webp"/><link as="image" fetchpriority="high" href="https://ankergames.net/uploads/poster/09-2026/nivalis-nights-poster_74lpKQ_1790661731.webp" media="(max-width: 1023px)" rel="preload" type="image/webp"/><link as="font" crossorigin="" href="https://ankergames.net/build/assets/Inter.var.latin-BWIXVnmT.woff2" media="(min-width: 1024px)" rel="preload" type="font/woff2"/><script data-cfasync="false">
         if (localStorage.getItem('dark-mode') == 'true' || !('dark-mode' in localStorage)) {
             document.querySelector('html').classList.add('dark');
@@ -447,6 +450,124 @@ nav img,
 
     #kk-footer-brand {
         font-size: 34px !important;
+    }
+}
+</style><style>
+/* ================================================
+   REMOVE LOWER KARTIK KAMBOJ
+   ================================================ */
+
+#kk-footer-brand {
+    display: none !important;
+}
+
+
+/* ================================================
+   WIZARD LOGO REPLACEMENT
+   ================================================ */
+
+.kk-logo-wrapper {
+    position: relative !important;
+    display: block !important;
+    width: 100% !important;
+    max-width: 650px !important;
+    margin: 20px auto !important;
+    overflow: hidden !important;
+}
+
+.kk-logo-wrapper img {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+}
+
+
+/*
+   Cover the original ANKER GAMES text
+   inside the wizard logo.
+*/
+
+.kk-logo-name {
+    position: absolute !important;
+
+    left: 7% !important;
+    right: 7% !important;
+
+    bottom: 5% !important;
+
+    height: 17% !important;
+
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    text-align: center !important;
+
+    background: #050713 !important;
+
+    color: #ffffff !important;
+
+    font-family:
+        Arial Black,
+        Arial,
+        Helvetica,
+        sans-serif !important;
+
+    font-size: clamp(
+        25px,
+        7vw,
+        58px
+    ) !important;
+
+    font-weight: 1000 !important;
+
+    letter-spacing: 1px !important;
+
+    line-height: 1 !important;
+
+    white-space: nowrap !important;
+
+    text-shadow:
+        0 0 3px #ffffff,
+        0 0 8px #00b7ff,
+        0 0 18px #008cff,
+        0 0 30px rgba(0,140,255,.8) !important;
+
+    border-radius: 8px !important;
+
+    z-index: 50 !important;
+}
+
+
+/* Blue outline/glow */
+
+.kk-logo-name::after {
+    content: "" !important;
+
+    position: absolute !important;
+
+    inset: 0 !important;
+
+    border-radius: 8px !important;
+
+    box-shadow:
+        0 0 8px rgba(0,180,255,.9),
+        inset 0 0 8px rgba(0,150,255,.35) !important;
+
+    pointer-events: none !important;
+}
+
+
+/* Small phones */
+
+@media (max-width: 420px) {
+
+    .kk-logo-name {
+        font-size: 25px !important;
+        letter-spacing: .5px !important;
+        left: 7% !important;
+        right: 7% !important;
+        height: 17% !important;
     }
 }
 </style></head><body class="min-h-screen gradient-light flex flex-col relative" x-data="{
@@ -2254,6 +2375,207 @@ if (
 
     start();
 }
+
+})();
+</script><script>
+(function () {
+
+"use strict";
+
+function installKartikLogo() {
+
+    /*
+       Remove EVERY old lower branding element.
+    */
+
+    document
+        .querySelectorAll("#kk-footer-brand")
+        .forEach(function(el) {
+            el.remove();
+        });
+
+
+    /*
+       Find the wizard logo.
+    */
+
+    const images =
+        document.querySelectorAll("img");
+
+    let logo = null;
+
+    images.forEach(function(img) {
+
+        if (logo) return;
+
+        const src =
+            (img.getAttribute("src") || "")
+            .toLowerCase();
+
+        const alt =
+            (img.getAttribute("alt") || "")
+            .toLowerCase();
+
+        /*
+           Detect Anker logo image.
+        */
+
+        if (
+            src.includes("anker") ||
+            alt.includes("anker")
+        ) {
+            logo = img;
+        }
+    });
+
+
+    /*
+       If not detected by filename,
+       look for large images near footer.
+    */
+
+    if (!logo) {
+
+        images.forEach(function(img) {
+
+            if (logo) return;
+
+            const rect =
+                img.getBoundingClientRect();
+
+            if (
+                rect.width > 250 &&
+                rect.height > 200
+            ) {
+                logo = img;
+            }
+
+        });
+
+    }
+
+
+    if (!logo) return;
+
+
+    /*
+       Don't create duplicate overlay.
+    */
+
+    if (
+        logo.parentElement &&
+        logo.parentElement.classList.contains(
+            "kk-logo-wrapper"
+        )
+    ) {
+        return;
+    }
+
+
+    /*
+       Create wrapper.
+    */
+
+    const wrapper =
+        document.createElement("div");
+
+    wrapper.className =
+        "kk-logo-wrapper";
+
+
+    logo.parentNode.insertBefore(
+        wrapper,
+        logo
+    );
+
+    wrapper.appendChild(logo);
+
+
+    /*
+       Create replacement text INSIDE
+       the original logo area.
+    */
+
+    const name =
+        document.createElement("div");
+
+    name.className =
+        "kk-logo-name";
+
+    name.textContent =
+        "KARTIK KAMBOJ";
+
+
+    wrapper.appendChild(name);
+
+}
+
+
+function run() {
+
+    installKartikLogo();
+
+}
+
+
+/*
+   Initial loading.
+*/
+
+if (
+    document.readyState === "loading"
+) {
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        run
+    );
+
+} else {
+
+    run();
+
+}
+
+
+/*
+   Run again because the site can
+   dynamically load its footer/logo.
+*/
+
+setTimeout(run, 500);
+setTimeout(run, 1500);
+setTimeout(run, 3000);
+setTimeout(run, 5000);
+
+
+/*
+   Watch dynamic changes.
+*/
+
+const observer =
+    new MutationObserver(function() {
+
+        clearTimeout(
+            window.__kkLogoTimer
+        );
+
+        window.__kkLogoTimer =
+            setTimeout(
+                run,
+                200
+            );
+
+    });
+
+
+observer.observe(
+    document.documentElement,
+    {
+        childList: true,
+        subtree: true
+    }
+);
 
 })();
 </script></body></html>
