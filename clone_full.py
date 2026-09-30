@@ -3,7 +3,7 @@ from curl_cffi import requests
 from bs4 import BeautifulSoup
 
 TARGET_URL = "https://ankergames.net"
-print("[*] Downloading and fixing layout & redirects...")
+print("[*] Downloading and fixing header text and redirects...")
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
 resp = requests.get(TARGET_URL, headers=headers, impersonate="chrome")
 
@@ -24,20 +24,14 @@ for element in soup.find_all(text=True):
         if new_text != element:
             element.replace_with(new_text)
 
-# 3. Fix download link redirects (prevent annoying page takeovers)
-for a in soup.find_all('a', href=True):
-    href = a['href'].lower()
-    if 'download' in href or 'file' in href or 'mega' in href or 'drive' in href:
-        a['target'] = '_blank'
-
-# 4. Remove unwanted items (Discord, Donations)
+# 3. Remove unwanted items (Discord, Donations)
 for el in soup.find_all(['div', 'a', 'button', 'li']):
     text = el.get_text().strip().lower()
     if any(kw in text for kw in ['discord', 'donation', 'donations', 'nebulo', 'reddit']):
         if len(text) < 40:
             el.decompose()
 
-# 5. Inject CSS to hide old header images and display "Kartik Kamboj" cleanly
+# 4. Inject CSS to hide blank logo spaces and properly position "Kartik Kamboj" text
 style_tag = soup.new_tag('style')
 style_tag.string = """
     html, body {
@@ -49,37 +43,49 @@ style_tag.string = """
         width: 100% !important; height: 100% !important;
         z-index: -999999 !important; pointer-events: none !important;
     }
-    /* Force hide original header logo image and show clean text */
+    /* Hide old logo images completely so they don't leave blank gaps */
     header img, nav img, .brand-logo, [class*="logo"] img {
         display: none !important;
     }
-    header a, nav a {
-        display: inline-flex !important;
-        align-items: center !important;
-    }
-    .top-brand-text {
+    /* Force custom brand styling right where the logo was */
+    .brand-title-fixed-header {
         color: #ffffff !important;
         font-size: 20px !important;
         font-weight: 900 !important;
         text-decoration: none !important;
-        margin-left: 5px;
+        display: inline-block !important;
+        margin-left: 12px !important;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
     }
 """
 if soup.head:
     soup.head.append(style_tag)
 
-# 6. Insert Kartik Kamboj text precisely inside nav/header container
+# 5. Insert Kartik Kamboj element precisely inside the navigation bar
 nav_el = soup.find('nav') or soup.find('header')
 if nav_el:
     brand_span = soup.new_tag('span')
-    brand_span['class'] = 'top-brand-text'
+    brand_span['class'] = 'brand-title-fixed-header'
     brand_span.string = 'Kartik Kamboj'
     nav_el.insert(0, brand_span)
 
-# 7. Inject 3D Galaxy Script
+# 6. Inject 3D Galaxy background & download redirect fix script
 script_tag = soup.new_tag('script')
 script_tag.string = """
 document.addEventListener("DOMContentLoaded", function() {
+    // Prevent unwanted redirects on download links
+    document.addEventListener('click', function(e) {
+        let target = e.target.closest('a');
+        if (target && target.href) {
+            let href = target.href.toLowerCase();
+            if (href.includes('download') || href.includes('file') || href.includes('mega') || href.includes('drive')) {
+                target.setAttribute('target', '_blank');
+            }
+        }
+    });
+
+    // 3D Galaxy Background Initialization
     if (!document.getElementById('bg-canvas')) {
         const canvas = document.createElement('canvas');
         canvas.id = 'bg-canvas';
@@ -123,4 +129,4 @@ if soup.body:
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(str(soup))
 
-print("[+] Successfully fixed header branding and redirect issues!")
+print("[+] Successfully fixed header title and download redirects!")
