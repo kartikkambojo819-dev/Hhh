@@ -3,7 +3,7 @@ from curl_cffi import requests
 from bs4 import BeautifulSoup
 
 TARGET_URL = "https://ankergames.net"
-print("[*] Downloading clean layout...")
+print("[*] Downloading and fixing layout & redirects...")
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
 resp = requests.get(TARGET_URL, headers=headers, impersonate="chrome")
 
@@ -17,21 +17,27 @@ soup = BeautifulSoup(resp.text, 'html.parser')
 if soup.title:
     soup.title.string = "Kartik Kamboj - Free PC Games Hub"
 
-# 2. Safely replace text nodes without breaking HTML structure
+# 2. Replace Anker text globally across text nodes
 for element in soup.find_all(text=True):
     if element.parent.name not in ['style', 'script', '[document]']:
         new_text = element.replace('AnkerGames', 'Kartik Kamboj').replace('Anker Games', 'Kartik Kamboj').replace('ANKER GAMES', 'Kartik Kamboj').replace('ankergames', 'kartikkamboj')
         if new_text != element:
             element.replace_with(new_text)
 
-# 3. Clean unwanted items (Discord, Donations)
+# 3. Fix download link redirects (prevent annoying page takeovers)
+for a in soup.find_all('a', href=True):
+    href = a['href'].lower()
+    if 'download' in href or 'file' in href or 'mega' in href or 'drive' in href:
+        a['target'] = '_blank'
+
+# 4. Remove unwanted items (Discord, Donations)
 for el in soup.find_all(['div', 'a', 'button', 'li']):
     text = el.get_text().strip().lower()
     if any(kw in text for kw in ['discord', 'donation', 'donations', 'nebulo', 'reddit']):
         if len(text) < 40:
             el.decompose()
 
-# 4. Inject 3D Galaxy background & clean branding CSS fix for header logo
+# 5. Inject CSS to hide old header images and display "Kartik Kamboj" cleanly
 style_tag = soup.new_tag('style')
 style_tag.string = """
     html, body {
@@ -43,31 +49,34 @@ style_tag.string = """
         width: 100% !important; height: 100% !important;
         z-index: -999999 !important; pointer-events: none !important;
     }
-    /* Fix top logo/brand display */
-    header img, nav img, .brand-logo, [class*="logo"] {
+    /* Force hide original header logo image and show clean text */
+    header img, nav img, .brand-logo, [class*="logo"] img {
         display: none !important;
     }
-    .custom-brand-text {
+    header a, nav a {
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+    .top-brand-text {
         color: #ffffff !important;
         font-size: 20px !important;
-        font-weight: 800 !important;
+        font-weight: 900 !important;
         text-decoration: none !important;
-        letter-spacing: 0.5px;
-        margin-left: 10px;
+        margin-left: 5px;
     }
 """
 if soup.head:
     soup.head.append(style_tag)
 
-# 5. Insert Kartik Kamboj text neatly inside header/nav
+# 6. Insert Kartik Kamboj text precisely inside nav/header container
 nav_el = soup.find('nav') or soup.find('header')
 if nav_el:
     brand_span = soup.new_tag('span')
-    brand_span['class'] = 'custom-brand-text'
+    brand_span['class'] = 'top-brand-text'
     brand_span.string = 'Kartik Kamboj'
-    nav_el.append(brand_span)
+    nav_el.insert(0, brand_span)
 
-# 6. Inject 3D Galaxy Script
+# 7. Inject 3D Galaxy Script
 script_tag = soup.new_tag('script')
 script_tag.string = """
 document.addEventListener("DOMContentLoaded", function() {
@@ -114,4 +123,4 @@ if soup.body:
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(str(soup))
 
-print("[+] Successfully updated branding with Kartik Kamboj!")
+print("[+] Successfully fixed header branding and redirect issues!")
