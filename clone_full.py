@@ -3,7 +3,7 @@ from curl_cffi import requests
 from bs4 import BeautifulSoup
 
 TARGET_URL = "https://ankergames.net"
-print("[*] Downloading and fixing header text and redirects...")
+print("[*] Downloading and adding promotional banner...")
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
 resp = requests.get(TARGET_URL, headers=headers, impersonate="chrome")
 
@@ -31,7 +31,7 @@ for el in soup.find_all(['div', 'a', 'button', 'li']):
         if len(text) < 40:
             el.decompose()
 
-# 4. Inject CSS to hide blank logo spaces and properly position "Kartik Kamboj" text
+# 4. Inject CSS for 3D background, header brand, and the promotional banner style
 style_tag = soup.new_tag('style')
 style_tag.string = """
     html, body {
@@ -43,11 +43,9 @@ style_tag.string = """
         width: 100% !important; height: 100% !important;
         z-index: -999999 !important; pointer-events: none !important;
     }
-    /* Hide old logo images completely so they don't leave blank gaps */
     header img, nav img, .brand-logo, [class*="logo"] img {
         display: none !important;
     }
-    /* Force custom brand styling right where the logo was */
     .brand-title-fixed-header {
         color: #ffffff !important;
         font-size: 20px !important;
@@ -58,11 +56,35 @@ style_tag.string = """
         letter-spacing: 0.5px;
         white-space: nowrap;
     }
+    /* Promotional Banner Style */
+    .custom-promo-banner {
+        background: linear-gradient(135deg, #ff416c, #ff4b2b);
+        color: #ffffff;
+        padding: 12px 20px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 15px;
+        box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4);
+        position: relative;
+        z-index: 99;
+        margin: 15px auto;
+        max-width: 90%;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        text-decoration: none;
+        transition: transform 0.2s ease;
+    }
+    .custom-promo-banner:hover {
+        transform: scale(1.02);
+    }
 """
 if soup.head:
     soup.head.append(style_tag)
 
-# 5. Insert Kartik Kamboj element precisely inside the navigation bar
+# 5. Insert Kartik Kamboj title in header
 nav_el = soup.find('nav') or soup.find('header')
 if nav_el:
     brand_span = soup.new_tag('span')
@@ -70,14 +92,24 @@ if nav_el:
     brand_span.string = 'Kartik Kamboj'
     nav_el.insert(0, brand_span)
 
-# 6. Inject 3D Galaxy background & download redirect fix script
+# 6. Insert the Promotional Banner right below the header/nav
+target_url_banner = "https://ultranova-tools.com/preland/storage/ut/privygo_brwsr/utility-app-f/apk/2/index.html?land_id=6792385&p1=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.privygo.go%26listing%3Dp_1%26referrer%3Dutm_source%253Dall_99_1476223%2526utm_content%253D7089e6b9be67a22383603c1ddbba2ea6%2526utm_medium%253Daffiliate%2526utm_campaign%253Dall_99_1476223_IN_pg%2526PLACEMENT_ID%253D31490188%2526time%253D%257Btime%257D%2526adimp%253D1%2526rl%253Dhttps%25253A%25252F%25252Fmeetsweetmeet.com%25252F%25253Fparams%25253DdisableAd-true%2526rl_t%253D18%25252B%2526rl_i%253Dhttps%25253A%25252F%25252Ffirebasestorage.googleapis.com%25252Fv0%25252Fb%25252Fsb-1-fe340.firebasestorage.app%25252Fo%25252Fic_site_video.png%25253Falt%25253Dmedia%252526token%25253D54d8b5fb-344c-45da-8bf9-f60ad44f762b%2526h_type%253D1%2526subs%253D3"
+
+banner_a = soup.new_tag('a', href=target_url_banner, target='_blank')
+banner_a['class'] = 'custom-promo-banner'
+banner_a.string = '🔥 Special Recommended Utility App - Click Here to Explore! 🚀'
+
+container_div = soup.find('main') or soup.find('div', class_='container') or soup.body
+if container_div:
+    container_div.insert(0, banner_a)
+
+# 7. Inject 3D Galaxy Script & Download Protection
 script_tag = soup.new_tag('script')
 script_tag.string = """
 document.addEventListener("DOMContentLoaded", function() {
-    // Prevent unwanted redirects on download links
     document.addEventListener('click', function(e) {
         let target = e.target.closest('a');
-        if (target && target.href) {
+        if (target && target.href && !target.classList.contains('custom-promo-banner')) {
             let href = target.href.toLowerCase();
             if (href.includes('download') || href.includes('file') || href.includes('mega') || href.includes('drive')) {
                 target.setAttribute('target', '_blank');
@@ -85,7 +117,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    // 3D Galaxy Background Initialization
     if (!document.getElementById('bg-canvas')) {
         const canvas = document.createElement('canvas');
         canvas.id = 'bg-canvas';
@@ -129,4 +160,4 @@ if soup.body:
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(str(soup))
 
-print("[+] Successfully fixed header title and download redirects!")
+print("[+] Successfully added promotional banner to index.html!")
