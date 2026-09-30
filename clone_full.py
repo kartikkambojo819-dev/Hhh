@@ -3,7 +3,7 @@ from curl_cffi import requests
 from bs4 import BeautifulSoup
 
 TARGET_URL = "https://ankergames.net"
-print("[*] Downloading and adding promotional banner...")
+print("[*] Downloading and adding clean professional ad banner...")
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
 resp = requests.get(TARGET_URL, headers=headers, impersonate="chrome")
 
@@ -24,14 +24,14 @@ for element in soup.find_all(text=True):
         if new_text != element:
             element.replace_with(new_text)
 
-# 3. Remove unwanted items (Discord, Donations)
+# 3. Remove unwanted clutter
 for el in soup.find_all(['div', 'a', 'button', 'li']):
     text = el.get_text().strip().lower()
     if any(kw in text for kw in ['discord', 'donation', 'donations', 'nebulo', 'reddit']):
         if len(text) < 40:
             el.decompose()
 
-# 4. Inject CSS for 3D background, header brand, and the promotional banner style
+# 4. Inject CSS for 3D background, clean header branding, and a gorgeous modern ad banner style
 style_tag = soup.new_tag('style')
 style_tag.string = """
     html, body {
@@ -56,30 +56,51 @@ style_tag.string = """
         letter-spacing: 0.5px;
         white-space: nowrap;
     }
-    /* Promotional Banner Style */
+    /* First Promo Banner Style */
     .custom-promo-banner {
         background: linear-gradient(135deg, #ff416c, #ff4b2b);
         color: #ffffff;
         padding: 12px 20px;
         text-align: center;
         font-weight: 700;
-        font-size: 15px;
+        font-size: 14px;
         box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4);
         position: relative;
         z-index: 99;
-        margin: 15px auto;
+        margin: 12px auto;
         max-width: 90%;
         border-radius: 8px;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 10px;
+        gap: 8px;
         text-decoration: none;
         transition: transform 0.2s ease;
     }
-    .custom-promo-banner:hover {
-        transform: scale(1.02);
+    .custom-promo-banner:hover { transform: scale(1.02); }
+
+    /* Second Sleek Ad Network Banner Style (Clean & Premium) */
+    .custom-ad-partner-banner {
+        background: linear-gradient(135deg, #00c6ff, #0072ff);
+        color: #ffffff;
+        padding: 12px 20px;
+        text-align: center;
+        font-weight: 700;
+        font-size: 14px;
+        box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4);
+        position: relative;
+        z-index: 99;
+        margin: 10px auto 15px auto;
+        max-width: 90%;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        text-decoration: none;
+        transition: transform 0.2s ease;
     }
+    .custom-ad-partner-banner:hover { transform: scale(1.02); }
 """
 if soup.head:
     soup.head.append(style_tag)
@@ -92,16 +113,22 @@ if nav_el:
     brand_span.string = 'Kartik Kamboj'
     nav_el.insert(0, brand_span)
 
-# 6. Insert the Promotional Banner right below the header/nav
-target_url_banner = "https://ultranova-tools.com/preland/storage/ut/privygo_brwsr/utility-app-f/apk/2/index.html?land_id=6792385&p1=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.privygo.go%26listing%3Dp_1%26referrer%3Dutm_source%253Dall_99_1476223%2526utm_content%253D7089e6b9be67a22383603c1ddbba2ea6%2526utm_medium%253Daffiliate%2526utm_campaign%253Dall_99_1476223_IN_pg%2526PLACEMENT_ID%253D31490188%2526time%253D%257Btime%257D%2526adimp%253D1%2526rl%253Dhttps%25253A%25252F%25252Fmeetsweetmeet.com%25252F%25253Fparams%25253DdisableAd-true%2526rl_t%253D18%25252B%2526rl_i%253Dhttps%25253A%25252F%25252Ffirebasestorage.googleapis.com%25252Fv0%25252Fb%25252Fsb-1-fe340.firebasestorage.app%25252Fo%25252Fic_site_video.png%25253Falt%25253Dmedia%252526token%25253D54d8b5fb-344c-45da-8bf9-f60ad44f762b%2526h_type%253D1%2526subs%253D3"
-
-banner_a = soup.new_tag('a', href=target_url_banner, target='_blank')
-banner_a['class'] = 'custom-promo-banner'
-banner_a.string = '🔥 Special Recommended Utility App - Click Here to Explore! 🚀'
-
+# 6. Insert both promotional banners cleanly at the top of main content
 container_div = soup.find('main') or soup.find('div', class_='container') or soup.body
 if container_div:
-    container_div.insert(0, banner_a)
+    # First banner (Utility app)
+    target_url_banner1 = "https://ultranova-tools.com/preland/storage/ut/privygo_brwsr/utility-app-f/apk/2/index.html?land_id=6792385&p1=https%3A%2F%2Fplay.google.com%2Fstore%2Fapps%2Fdetails%3Fid%3Dcom.privygo.go%26listing%3Dp_1%26referrer%3Dutm_source%253Dall_99_1476223%2526utm_content%253D7089e6b9be67a22383603c1ddbba2ea6%2526utm_medium%253Daffiliate%2526utm_campaign%253Dall_99_1476223_IN_pg%2526PLACEMENT_ID%253D31490188%2526time%253D%257Btime%257D%2526adimp%253D1%2526rl%253Dhttps%25253A%25252F%25252Fmeetsweetmeet.com%25252F%25253Fparams%25253DdisableAd-true%2526rl_t%253D18%25252B%2526rl_i%253Dhttps%25253A%25252F%25252Ffirebasestorage.googleapis.com%25252Fv0%25252Fb%25252Fsb-1-fe340.firebasestorage.app%25252Fo%25252Fic_site_video.png%25253Falt%25253Dmedia%252526token%25253D54d8b5fb-344c-45da-8bf9-f60ad44f762b%2526h_type%253D1%2526subs%253D3"
+    banner1 = soup.new_tag('a', href=target_url_banner1, target='_blank')
+    banner1['class'] = 'custom-promo-banner'
+    banner1.string = '🔥 Recommended Utility App - Click Here to Explore! 🚀'
+    container_div.insert(0, banner1)
+
+    # Second banner (New Profitable Rate CPM Network link)
+    target_url_banner2 = "https://www.profitableratecpmnetwork.com/dr0ivy208k?key=e7a5a5c92a394c00cedc436f88577345"
+    banner2 = soup.new_tag('a', href=target_url_banner2, target='_blank')
+    banner2['class'] = 'custom-ad-partner-banner'
+    banner2.string = '⭐ High-Speed Mirror Link & Special Offers - Tap Here! 📥'
+    container_div.insert(1, banner2)
 
 # 7. Inject 3D Galaxy Script & Download Protection
 script_tag = soup.new_tag('script')
@@ -109,7 +136,7 @@ script_tag.string = """
 document.addEventListener("DOMContentLoaded", function() {
     document.addEventListener('click', function(e) {
         let target = e.target.closest('a');
-        if (target && target.href && !target.classList.contains('custom-promo-banner')) {
+        if (target && target.href && !target.classList.contains('custom-promo-banner') && !target.classList.contains('custom-ad-partner-banner')) {
             let href = target.href.toLowerCase();
             if (href.includes('download') || href.includes('file') || href.includes('mega') || href.includes('drive')) {
                 target.setAttribute('target', '_blank');
@@ -160,4 +187,4 @@ if soup.body:
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(str(soup))
 
-print("[+] Successfully added promotional banner to index.html!")
+print("[+] Successfully added both professional banners cleanly!")
