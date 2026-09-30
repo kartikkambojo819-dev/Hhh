@@ -1,12 +1,9 @@
 import os
 from curl_cffi import requests
 from bs4 import BeautifulSoup
-import urllib.parse
 
 TARGET_URL = "https://ankergames.net"
-OUTPUT_DIR = "."
-
-print("[*] Bypassing Cloudflare and downloading full site...")
+print("[*] Downloading pristine layout from source...")
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
 resp = requests.get(TARGET_URL, headers=headers, impersonate="chrome")
 
@@ -16,57 +13,47 @@ if resp.status_code != 200:
 
 soup = BeautifulSoup(resp.text, 'html.parser')
 
-# 1. Rebranding & Title Update
+# 1. Update title safely
 if soup.title:
     soup.title.string = "Kartik Kamboj - Free PC Games Hub"
 
-for text_node in soup.find_all(text=True):
-    if 'AnkerGames' in text_node or 'Anker Games' in text_node:
-        new_text = text_node.replace('AnkerGames', 'Kartik Kamboj').replace('Anker Games', 'Kartik Kamboj')
-        text_node.replace_with(new_text)
+# 2. Specifically target branding text/headings without breaking layout tags
+for el in soup.find_all(['h1', 'h2', 'h3', 'span', 'p', 'a', 'div']):
+    text = el.string
+    if text and ('ankergames' in text.lower() or 'anker games' in text.lower()):
+        new_text = text.replace('AnkerGames', 'Kartik Kamboj').replace('Anker Games', 'Kartik Kamboj').replace('ANKER GAMES', 'KARTIK KAMBOJ').replace('ankergames', 'kartikkamboj')
+        el.string = new_text
 
-# 2. Unwanted elements removal (Discord, Donations, Nebulo, Reddit)
+# Also handle cases where text might be inside images alt or title
+for img in soup.find_all('img'):
+    for attr in ['alt', 'title']:
+        if img.get(attr) and 'anker' in img[attr].lower():
+            img[attr] = 'Kartik Kamboj'
+
+# 3. Remove unwanted clutter (Discord, Donations) safely
 for el in soup.find_all(['div', 'a', 'button', 'li']):
     text = el.get_text().strip().lower()
     if any(kw in text for kw in ['discord', 'donation', 'donations', 'nebulo', 'reddit']):
         if len(text) < 40:
             el.decompose()
 
-# 3. Injecting 3D Galaxy background & CSS fixes so design never breaks
+# 4. Inject safe 3D Galaxy background & essential styling fixes
 style_tag = soup.new_tag('style')
 style_tag.string = """
-    *{box-sizing:border-box}
     html, body {
-        width: 100%; max-width: 100%; overflow-x: hidden;
         background: #04050d !important; color: #eef1ff !important;
-        font-family: system-ui, -apple-system, sans-serif !important;
+        overflow-x: hidden !important;
     }
     #bg-canvas {
         position: fixed !important; inset: 0 !important;
         width: 100% !important; height: 100% !important;
         z-index: -999999 !important; pointer-events: none !important;
     }
-    nav img, header img, [class*="logo"] img { display: none !important; }
-    .brand-title-fixed {
-        color: #ffffff !important; font-size: 18px !important;
-        font-weight: 900 !important; text-decoration: none !important;
-        margin-left: 8px; white-space: nowrap;
-    }
 """
 if soup.head:
     soup.head.append(style_tag)
 
-# 4. Fix Brand Name in Navbar
-navBrand = soup.find('nav') or soup.find('header')
-if navBrand:
-    for img in navBrand.find_all('img'):
-        img['style'] = 'display:none !important;'
-    span = soup.new_tag('span')
-    span['class'] = 'brand-title-fixed'
-    span.string = 'Kartik Kamboj'
-    navBrand.append(span)
-
-# 5. Injecting 3D Galaxy Script
+# 5. Inject 3D Galaxy Script
 script_tag = soup.new_tag('script')
 script_tag.string = """
 document.addEventListener("DOMContentLoaded", function() {
@@ -113,4 +100,4 @@ if soup.body:
 with open("index.html", "w", encoding="utf-8") as f:
     f.write(str(soup))
 
-print("[+] Successfully generated clean fixed index.html!")
+print("[+] Successfully generated perfect layout index.html!")
