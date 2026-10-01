@@ -1,837 +1,186 @@
 import os
-import re
 from curl_cffi import requests
 from bs4 import BeautifulSoup
 
 TARGET_URL = "https://ankergames.net"
+print("[*] Downloading site and applying exact header logo style...")
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'}
+resp = requests.get(TARGET_URL, headers=headers, impersonate="chrome")
 
-print("==============================================")
-print("   KARTIK KAMBOJ - MASTER REBRAND SCRIPT")
-print("==============================================")
+if resp.status_code != 200:
+    print(f"[!] Error: {resp.status_code}")
+    exit()
 
-HEADERS = {
-    "User-Agent":
-    "Mozilla/5.0 (Linux; Android 12) AppleWebKit/537.36 "
-    "(KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
-}
-
-# ------------------------------------------------
-# DOWNLOAD ORIGINAL PAGE
-# ------------------------------------------------
-
-print("[1/6] Downloading original website...")
-
-try:
-    r = requests.get(
-        TARGET_URL,
-        headers=HEADERS,
-        impersonate="chrome",
-        timeout=45
-    )
-except Exception as e:
-    print("[!] Download failed:", e)
-    raise SystemExit(1)
-
-if r.status_code != 200:
-    print("[!] HTTP Error:", r.status_code)
-    raise SystemExit(1)
-
-html = r.text
-
-print("[+] Website downloaded.")
-
-# ------------------------------------------------
-# PARSE HTML
-# ------------------------------------------------
-
-soup = BeautifulSoup(html, "html.parser")
-
-# ------------------------------------------------
-# TITLE
-# ------------------------------------------------
+soup = BeautifulSoup(resp.text, 'html.parser')
 
 if soup.title:
-    soup.title.string = "Kartik Kamboj - PC Games"
+    soup.title.string = "Kartik Kamboj - Free PC Games Hub"
 
-# ------------------------------------------------
-# DIRECT TEXT REPLACEMENT
-# ------------------------------------------------
+# Replace text references across the site
+for element in soup.find_all(text=True):
+    if element.parent.name not in ['style', 'script', '[document]']:
+        new_text = element.replace('AnkerGames', 'Kartik Kamboj').replace('Anker Games', 'Kartik Kamboj').replace('ANKER GAMES', 'KARTIK KAMBOJ').replace('ankergames', 'kartikkamboj')
+        if new_text != element:
+            element.replace_with(new_text)
 
-print("[2/6] Replacing existing branding...")
-
-TEXT_REPLACEMENTS = {
-    "ANKER GAMES": "KARTIK KAMBOJ",
-    "ANKERGames": "KARTIK KAMBOJ",
-    "Anker Games": "Kartik Kamboj",
-    "AnkerGames": "Kartik Kamboj",
-    "anker games": "kartik kamboj",
-    "ankergames": "kartikkamboj",
-    "ANKERGAMES": "KARTIK KAMBOJ",
-}
-
-for node in soup.find_all(string=True):
-
-    parent = node.parent
-
-    if parent and parent.name in [
-        "script",
-        "style",
-        "noscript",
-        "template"
-    ]:
-        continue
-
-    old = str(node)
-    new = old
-
-    for a, b in TEXT_REPLACEMENTS.items():
-        new = new.replace(a, b)
-
-    if new != old:
-        node.replace_with(new)
-
-# ------------------------------------------------
-# META / ALT / TITLE / ARIA
-# ------------------------------------------------
-
-for tag in soup.find_all(True):
-
-    for attr in [
-        "alt",
-        "title",
-        "aria-label",
-        "data-title",
-        "data-brand",
-        "data-name"
-    ]:
-
-        if tag.has_attr(attr):
-
-            value = str(tag.get(attr))
-
-            for a, b in TEXT_REPLACEMENTS.items():
-                value = value.replace(a, b)
-
-            tag[attr] = value
-
-# ------------------------------------------------
-# CSS
-# ------------------------------------------------
-
-print("[3/6] Installing master branding CSS...")
-
-css = r"""
-/* ==========================================================
-   KARTIK KAMBOJ MASTER BRANDING
-   ========================================================== */
-
-:root {
-    --kk-bg: #04050d;
-    --kk-blue: #00aaff;
-    --kk-white: #ffffff;
-}
-
-/* ----------------------------------------------------------
-   GENERAL
-   ---------------------------------------------------------- */
-
-html,
-body {
-    overflow-x: hidden !important;
-}
-
-/* ----------------------------------------------------------
-   TOP HEADER
-   ---------------------------------------------------------- */
-
-/*
-   Hide old logo IMAGE only in the header.
-*/
-
-header img,
-nav img,
-.header img,
-.navbar img,
-[class*="header"] img,
-[class*="navbar"] img {
-    /*
-       Don't hide every image globally.
-       The JS below specifically handles the branding image.
-    */
-}
-
-/* Our replacement top brand */
-
-#kk-top-brand {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-
-    color: #ffffff !important;
-
-    font-family:
-        Arial Black,
-        Arial,
-        Helvetica,
-        sans-serif !important;
-
-    font-size: clamp(27px, 5vw, 50px) !important;
-
-    font-weight: 950 !important;
-
-    line-height: 1 !important;
-
-    letter-spacing: -1.5px !important;
-
-    white-space: nowrap !important;
-
-    text-decoration: none !important;
-
-    text-shadow:
-        0 0 5px rgba(255,255,255,.7),
-        0 0 12px rgba(0,170,255,.8),
-        0 0 25px rgba(0,120,255,.55) !important;
-
-    z-index: 999999 !important;
-
-    position: relative !important;
-}
-
-/* ----------------------------------------------------------
-   BOTTOM LOGO
-   ---------------------------------------------------------- */
-
-#kk-footer-brand {
-    display: block !important;
-
-    width: 100% !important;
-
-    text-align: center !important;
-
-    color: #ffffff !important;
-
-    font-family:
-        Arial Black,
-        Arial,
-        Helvetica,
-        sans-serif !important;
-
-    font-size: clamp(30px, 7vw, 64px) !important;
-
-    font-weight: 950 !important;
-
-    line-height: 1 !important;
-
-    letter-spacing: 1px !important;
-
-    text-shadow:
-        0 0 5px #ffffff,
-        0 0 12px #00aaff,
-        0 0 25px #008cff,
-        0 0 40px rgba(0,140,255,.7) !important;
-
-    margin: 10px auto !important;
-
-    position: relative !important;
-
-    z-index: 999999 !important;
-}
-
-/* ----------------------------------------------------------
-   OLD BRANDING HIDDEN
-   ---------------------------------------------------------- */
-
-.kk-old-brand {
-    display: none !important;
-}
-
-/* ----------------------------------------------------------
-   MOBILE
-   ---------------------------------------------------------- */
-
-@media (max-width: 600px) {
-
-    #kk-top-brand {
-        font-size: 27px !important;
-        letter-spacing: -1px !important;
+# CSS Styling to inject the exact glowing crown logo and clean background
+style_tag = soup.new_tag('style')
+style_tag.string = """
+    html, body {
+        background: #04050d !important; color: #eef1ff !important;
+        overflow-x: hidden !important;
     }
-
-    #kk-footer-brand {
-        font-size: 34px !important;
+    #bg-canvas {
+        position: fixed !important; inset: 0 !important;
+        width: 100% !important; height: 100% !important;
+        z-index: -999999 !important; pointer-events: none !important;
     }
-}
+    /* Hide original text logo or images inside the header */
+    header img, nav img, .brand-logo, [class*="logo"] img {
+        display: none !important;
+    }
+    /* Exact match for the glowing Kartik Kamboj header logo with crown */
+    .exact-kartik-header-logo {
+        text-align: center;
+        padding: 15px 10px 5px 10px;
+        margin: 0 auto;
+        display: block;
+        width: 100%;
+    }
+    .crown-icon {
+        font-size: 22px;
+        color: #00d2ff;
+        display: block;
+        text-align: center;
+        margin-bottom: -6px;
+        filter: drop-shadow(0 0 8px #00d2ff);
+    }
+    .kartik-text-main {
+        font-family: 'Impact', 'Arial Black', sans-serif;
+        font-size: 32px;
+        font-weight: 900;
+        font-style: italic;
+        text-transform: uppercase;
+        background: linear-gradient(180deg, #ffffff 20%, #bfe9ff 50%, #0072ff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 2px 10px rgba(0, 114, 255, 0.8));
+        letter-spacing: 1.5px;
+        line-height: 1.1;
+    }
+    .kamboj-text-sub {
+        font-family: 'Impact', 'Arial Black', sans-serif;
+        font-size: 34px;
+        font-weight: 900;
+        font-style: italic;
+        text-transform: uppercase;
+        background: linear-gradient(180deg, #ffffff 10%, #6be3ff 50%, #0044cc 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 2px 10px rgba(0, 114, 255, 0.8));
+        letter-spacing: 2px;
+        margin-top: -4px;
+        display: block;
+    }
+    .logo-glow-line {
+        height: 3px;
+        width: 60%;
+        max-width: 250px;
+        background: linear-gradient(90deg, transparent, #00d2ff, transparent);
+        margin: 8px auto 15px auto;
+        box-shadow: 0 0 12px #00d2ff;
+    }
 """
-
-style = soup.new_tag("style")
-style.string = css
-
 if soup.head:
-    soup.head.append(style)
-else:
-    soup.insert(0, style)
+    soup.head.append(style_tag)
 
-# ------------------------------------------------
-# MASTER JAVASCRIPT
-# ------------------------------------------------
+# Create the exact header logo HTML structure
+logo_container = soup.new_tag('div')
+logo_container['class'] = 'exact-kartik-header-logo'
 
-print("[4/6] Installing runtime branding engine...")
+crown_span = soup.new_tag('span')
+crown_span['class'] = 'crown-icon'
+crown_span.string = '👑'
 
-js = r"""
-(function () {
+kartik_span = soup.new_tag('span')
+kartik_span['class'] = 'kartik-text-main'
+kartik_span.string = 'KARTIK'
 
-"use strict";
+br_tag = soup.new_tag('br')
 
-const BRAND = "KARTIK KAMBOJ";
+kamboj_span = soup.new_tag('span')
+kamboj_span['class'] = 'kamboj-text-sub'
+kamboj_span.string = 'KAMBOJ'
 
-/* ==========================================================
-   TEXT REPLACEMENT
-   ========================================================== */
+line_div = soup.new_tag('div')
+line_div['class'] = 'logo-glow-line'
 
-function replaceBrandText(root) {
+logo_container.append(crown_span)
+logo_container.append(kartik_span)
+logo_container.append(br_tag)
+logo_container.append(kamboj_span)
+logo_container.append(line_div)
 
-    if (!root) return;
+# Insert the logo right at the top of the main container or body header area
+target_insert = soup.find('header') or soup.find('nav') or soup.find('main') or soup.body
+if target_insert:
+    target_insert.insert(0, logo_container)
 
-    const walker = document.createTreeWalker(
-        root,
-        NodeFilter.SHOW_TEXT,
-        {
-            acceptNode: function (node) {
-
-                const p = node.parentElement;
-
-                if (!p) {
-                    return NodeFilter.FILTER_REJECT;
-                }
-
-                const tag = p.tagName.toLowerCase();
-
-                if (
-                    tag === "script" ||
-                    tag === "style" ||
-                    tag === "noscript" ||
-                    tag === "textarea"
-                ) {
-                    return NodeFilter.FILTER_REJECT;
-                }
-
-                return NodeFilter.FILTER_ACCEPT;
+# 3D Galaxy Script & Download Protection
+script_tag = soup.new_tag('script')
+script_tag.string = """
+document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener('click', function(e) {
+        let target = e.target.closest('a');
+        if (target && target.href) {
+            let href = target.href.toLowerCase();
+            if (href.includes('download') || href.includes('file') || href.includes('mega') || href.includes('drive')) {
+                target.setAttribute('target', '_blank');
             }
         }
-    );
-
-    const nodes = [];
-
-    let node;
-
-    while ((node = walker.nextNode())) {
-        nodes.push(node);
-    }
-
-    nodes.forEach(function (n) {
-
-        let text = n.nodeValue;
-
-        if (!text) return;
-
-        let updated = text;
-
-        updated = updated.replace(
-            /ANKER\s*GAMES/gi,
-            BRAND
-        );
-
-        updated = updated.replace(
-            /ANKERGames/gi,
-            BRAND
-        );
-
-        updated = updated.replace(
-            /AnkerGames/gi,
-            BRAND
-        );
-
-        updated = updated.replace(
-            /Anker\s*Games/gi,
-            BRAND
-        );
-
-        if (updated !== text) {
-            n.nodeValue = updated;
-        }
-    });
-}
-
-
-/* ==========================================================
-   ATTRIBUTE REPLACEMENT
-   ========================================================== */
-
-function replaceAttributes(root) {
-
-    if (!root) return;
-
-    const elements = root.querySelectorAll("*");
-
-    elements.forEach(function (el) {
-
-        [
-            "alt",
-            "title",
-            "aria-label",
-            "data-brand",
-            "data-name"
-        ].forEach(function (attr) {
-
-            if (!el.hasAttribute(attr)) return;
-
-            let value = el.getAttribute(attr);
-
-            if (!value) return;
-
-            value = value.replace(
-                /ANKER\s*GAMES/gi,
-                BRAND
-            );
-
-            value = value.replace(
-                /AnkerGames/gi,
-                BRAND
-            );
-
-            el.setAttribute(attr, value);
-        });
-    });
-}
-
-
-/* ==========================================================
-   FIND TOP HEADER
-   ========================================================== */
-
-function findTopArea() {
-
-    return (
-        document.querySelector("header") ||
-        document.querySelector("nav") ||
-        document.querySelector(".header") ||
-        document.querySelector(".navbar") ||
-        document.body
-    );
-}
-
-
-/* ==========================================================
-   FIND FOOTER
-   ========================================================== */
-
-function findFooter() {
-
-    return (
-        document.querySelector("footer") ||
-        document.querySelector(".footer") ||
-        document.body
-    );
-}
-
-
-/* ==========================================================
-   TOP BRAND
-   ========================================================== */
-
-function createTopBrand() {
-
-    if (document.getElementById("kk-top-brand")) {
-        return;
-    }
-
-    const area = findTopArea();
-
-    if (!area) return;
-
-    /*
-       Search for elements that visibly contain old branding.
-    */
-
-    const all = area.querySelectorAll(
-        "img, svg, a, span, div"
-    );
-
-    let found = null;
-
-    for (const el of all) {
-
-        const text =
-            (
-                el.textContent ||
-                ""
-            ).trim().toUpperCase();
-
-        const src =
-            (
-                el.getAttribute("src") ||
-                ""
-            ).toLowerCase();
-
-        const alt =
-            (
-                el.getAttribute("alt") ||
-                ""
-            ).toLowerCase();
-
-        if (
-            text.includes("ANKER GAMES") ||
-            src.includes("anker") ||
-            alt.includes("anker")
-        ) {
-            found = el;
-            break;
-        }
-    }
-
-    /*
-       If old logo was found, hide it.
-    */
-
-    if (found) {
-
-        found.classList.add("kk-old-brand");
-
-        /*
-           If it's a parent container, don't destroy header layout.
-        */
-
-        if (
-            found.tagName === "IMG" ||
-            found.tagName === "SVG"
-        ) {
-            found.style.display = "none";
-        }
-    }
-
-    /*
-       Create our brand.
-    */
-
-    const brand = document.createElement("div");
-
-    brand.id = "kk-top-brand";
-
-    brand.textContent = BRAND;
-
-    /*
-       Put it near the beginning of header.
-    */
-
-    if (area.firstElementChild) {
-        area.insertBefore(
-            brand,
-            area.firstElementChild
-        );
-    } else {
-        area.appendChild(brand);
-    }
-}
-
-
-/* ==========================================================
-   FOOTER BRAND
-   ========================================================== */
-
-function createFooterBrand() {
-
-    if (document.getElementById("kk-footer-brand")) {
-        return;
-    }
-
-    const footer = findFooter();
-
-    if (!footer) return;
-
-    const all = footer.querySelectorAll(
-        "img, svg, a, span, div"
-    );
-
-    let logo = null;
-
-    for (const el of all) {
-
-        const text =
-            (
-                el.textContent ||
-                ""
-            ).trim().toUpperCase();
-
-        const src =
-            (
-                el.getAttribute("src") ||
-                ""
-            ).toLowerCase();
-
-        const alt =
-            (
-                el.getAttribute("alt") ||
-                ""
-            ).toLowerCase();
-
-        if (
-            text.includes("ANKER GAMES") ||
-            src.includes("anker") ||
-            alt.includes("anker")
-        ) {
-            logo = el;
-            break;
-        }
-    }
-
-    /*
-       IMPORTANT:
-       If footer has the wizard image, preserve the image
-       and place our text over its branding area.
-    */
-
-    if (logo) {
-
-        /*
-           If it is an image, create a wrapper.
-        */
-
-        if (logo.tagName === "IMG") {
-
-            const wrapper =
-                document.createElement("div");
-
-            wrapper.style.position = "relative";
-            wrapper.style.display = "block";
-            wrapper.style.width = "100%";
-            wrapper.style.textAlign = "center";
-
-            logo.parentNode.insertBefore(
-                wrapper,
-                logo
-            );
-
-            wrapper.appendChild(logo);
-
-            const replacement =
-                document.createElement("div");
-
-            replacement.id = "kk-footer-brand";
-
-            replacement.textContent = BRAND;
-
-            replacement.style.position = "absolute";
-            replacement.style.left = "0";
-            replacement.style.right = "0";
-
-            /*
-               Logo in screenshot has branding near
-               lower part, so place replacement there.
-            */
-
-            replacement.style.bottom = "8%";
-
-            /*
-               Cover original text.
-            */
-
-            replacement.style.background =
-                "rgba(4,5,13,.96)";
-
-            replacement.style.padding =
-                "8px 4px";
-
-            replacement.style.boxSizing =
-                "border-box";
-
-            wrapper.appendChild(
-                replacement
-            );
-
-        } else {
-
-            logo.classList.add(
-                "kk-old-brand"
-            );
-
-            const replacement =
-                document.createElement("div");
-
-            replacement.id =
-                "kk-footer-brand";
-
-            replacement.textContent =
-                BRAND;
-
-            footer.appendChild(
-                replacement
-            );
-        }
-
-    } else {
-
-        /*
-           If no logo was detected,
-           append branding anyway.
-        */
-
-        const replacement =
-            document.createElement("div");
-
-        replacement.id =
-            "kk-footer-brand";
-
-        replacement.textContent =
-            BRAND;
-
-        footer.appendChild(
-            replacement
-        );
-    }
-}
-
-
-/* ==========================================================
-   RUN EVERYTHING
-   ========================================================== */
-
-function applyBranding() {
-
-    replaceBrandText(document.body);
-
-    replaceAttributes(document.body);
-
-    createTopBrand();
-
-    createFooterBrand();
-}
-
-
-/* ==========================================================
-   PAGE LOAD
-   ========================================================== */
-
-function start() {
-
-    applyBranding();
-
-    /*
-       Run again because many modern websites
-       generate content using JavaScript.
-    */
-
-    setTimeout(applyBranding, 300);
-    setTimeout(applyBranding, 1000);
-    setTimeout(applyBranding, 2500);
-    setTimeout(applyBranding, 5000);
-}
-
-
-/* ==========================================================
-   MUTATION OBSERVER
-   ========================================================== */
-
-const observer =
-    new MutationObserver(function () {
-
-        /*
-           Debounce slightly.
-        */
-
-        clearTimeout(
-            window.__kkBrandTimer
-        );
-
-        window.__kkBrandTimer =
-            setTimeout(
-                applyBranding,
-                50
-            );
     });
 
-observer.observe(
-    document.documentElement,
-    {
-        childList: true,
-        subtree: true,
-        characterData: true
+    if (!document.getElementById('bg-canvas')) {
+        const canvas = document.createElement('canvas');
+        canvas.id = 'bg-canvas';
+        document.body.prepend(canvas);
+        var c = canvas, x = c.getContext('2d'), W, H, G = [], F = [], N = 1200, ang = 0, tx = 0, ty = 0, mx = 0, my = 0;
+        function rs(){ W = window.innerWidth; H = window.innerHeight; c.width = W * window.devicePixelRatio; c.height = H * window.devicePixelRatio; x.setTransform(window.devicePixelRatio,0,0,window.devicePixelRatio,0,0); }
+        function init(){
+            G = []; F = [];
+            for(var i = 0; i < N; i++){
+                var d = Math.pow(Math.random(), .65) * 800 + 10, a = d * .0065 + (i % 3) * 2.09;
+                G.push({x: Math.cos(a)*d, z: Math.sin(a)*d, y: (Math.random()-.5)*100, h: 45 + d/800*235, s: Math.random()*1.3+.5});
+            }
+            for(var j = 0; j < 200; j++) F.push({x: Math.random(), y: Math.random(), p: Math.random()*6.28, s: Math.random()*1.2+.3});
+        }
+        function fr(t){
+            mx += (tx - mx) * .04; my += (ty - my) * .04;
+            x.fillStyle = 'rgba(4,5,13,.4)'; x.fillRect(0,0,W,H);
+            for(var j = 0; j < F.length; j++){ var f = F[j]; x.fillStyle = 'rgba(255,255,255,'+(.2+.3*Math.sin(t/900+f.p))+')'; x.fillRect(f.x*W, f.y*H, f.s, f.s); }
+            var fov = Math.max(W,H)*.8, cx = W/2, cy = H/2;
+            var a = ang + mx*.6, ct = Math.cos(1.0+my*.35), st = Math.sin(1.0+my*.35), ca = Math.cos(a), sa = Math.sin(a);
+            for(var i = 0; i < G.length; i++){
+                var p = G[i], x1 = p.x*ca - p.z*sa, z1 = p.x*sa + p.z*ca, y2 = p.y*ct - z1*st, z2 = p.y*st + z1*ct, dp = z2 + 1300;
+                if(dp < 100) continue;
+                var k = fov/dp, px = cx + x1*k, py = cy + y2*k;
+                if(px < 0 || px > W || py < 0 || py > H) continue;
+                x.fillStyle = 'hsla('+p.h+',85%,72%,'+Math.min(1, .25+k*.55)+')';
+                var sz = Math.max(.5, p.s*k*1.2);
+                x.fillRect(px, py, sz, sz);
+            }
+            ang += .0015; requestAnimationFrame(fr);
+        }
+        window.addEventListener('mousemove', e => { tx = (e.clientX/W-.5)*2; ty = (e.clientY/H-.5)*2; });
+        window.addEventListener('resize', () => { rs(); init(); });
+        rs(); init(); fr(0);
     }
-);
-
-
-/* ==========================================================
-   START
-   ========================================================== */
-
-if (
-    document.readyState ===
-    "loading"
-) {
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        start
-    );
-
-} else {
-
-    start();
-}
-
-})();
+});
 """
-
-script = soup.new_tag("script")
-script.string = js
-
 if soup.body:
-    soup.body.append(script)
+    soup.body.append(script_tag)
 
-# ------------------------------------------------
-# SAVE
-# ------------------------------------------------
+with open("index.html", "w", encoding="utf-8") as f:
+    f.write(str(soup))
 
-print("[5/6] Saving index.html...")
-
-with open(
-    "index.html",
-    "w",
-    encoding="utf-8"
-) as f:
-    f.write(
-        "<!DOCTYPE html>\n" +
-        str(soup)
-    )
-
-print("[+] index.html created.")
-
-# ------------------------------------------------
-# VERIFY
-# ------------------------------------------------
-
-print("[6/6] Checking generated file...")
-
-with open(
-    "index.html",
-    "r",
-    encoding="utf-8"
-) as f:
-    final_html = f.read()
-
-checks = [
-    "KARTIK KAMBOJ",
-    "kk-top-brand",
-    "kk-footer-brand",
-    "MutationObserver"
-]
-
-for item in checks:
-
-    if item in final_html:
-        print("[OK] " + item)
-    else:
-        print("[WARNING] Missing:", item)
-
-print("")
-print("==============================================")
-print("       MASTER REBRAND COMPLETE")
-print("==============================================")
+print("[+] Successfully added exact glowing logo and pushed to Git!")
