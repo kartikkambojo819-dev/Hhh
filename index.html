@@ -3,1024 +3,169 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Kartik Kamboj Games</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bowlby+One&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
 <style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-html,body{
-    width:100%;
-    min-height:100%;
-}
-
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{width:100%;min-height:100%;}
 body{
-    background:
-        radial-gradient(circle at 50% -10%,rgba(0,100,255,.12),transparent 32%),
-        #020817;
-    color:#fff;
-    font-family:Inter,Arial,sans-serif;
-    overflow-x:hidden;
+    background:radial-gradient(circle at 50% -10%,rgba(0,100,255,.12),transparent 32%),#020817;
+    color:#fff;font-family:Inter,Arial,sans-serif;overflow-x:hidden;
 }
-
-/* ================= HEADER ================= */
-
 .top-header{
-    width:100%;
-    min-height:285px;
-    position:relative;
-    display:flex;
-    align-items:flex-start;
-    justify-content:center;
-    padding-top:42px;
-    overflow:hidden;
+    width:100%;min-height:220px;position:relative;display:flex;align-items:center;justify-content:center;padding-top:20px;overflow:hidden;
 }
-
-/* blue atmospheric glow */
-
 .top-header::before{
-    content:"";
-    position:absolute;
-    width:600px;
-    height:280px;
-    top:-100px;
-    left:50%;
-    transform:translateX(-50%);
-    background:radial-gradient(
-        ellipse,
-        rgba(0,125,255,.20),
-        rgba(0,70,255,.06) 45%,
-        transparent 75%
-    );
-    filter:blur(10px);
-    pointer-events:none;
+    content:"";position:absolute;width:600px;height:240px;top:-80px;left:50%;transform:translateX(-50%);
+    background:radial-gradient(ellipse,rgba(0,125,255,.20),rgba(0,70,255,.06) 45%,transparent 75%);
+    filter:blur(10px);pointer-events:none;
 }
-
-/* menu */
-
 .menu-btn{
-    position:absolute;
-    left:55px;
-    top:76px;
-    width:54px;
-    height:45px;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-    padding:4px 0;
-    cursor:pointer;
-    z-index:20;
+    position:absolute;left:35px;top:50%;transform:translateY(-50%);width:42px;height:35px;display:flex;flex-direction:column;justify-content:space-between;padding:3px 0;cursor:pointer;z-index:20;
 }
-
 .menu-btn span{
-    display:block;
-    width:54px;
-    height:4px;
-    background:#e8f4ff;
-    border-radius:10px;
-    box-shadow:
-        0 0 5px #fff,
-        0 0 12px #39aaff;
+    display:block;width:42px;height:4px;background:#e8f4ff;border-radius:10px;box-shadow:0 0 5px #fff,0 0 12px #39aaff;
 }
-
-/* right icons */
-
 .header-icons{
-    position:absolute;
-    right:55px;
-    top:68px;
-    display:flex;
-    gap:42px;
-    align-items:center;
-    z-index:20;
+    position:absolute;right:35px;top:50%;transform:translateY(-50%);display:flex;gap:24px;align-items:center;z-index:20;
 }
-
-.header-icon{
-    width:44px;
-    height:44px;
-    position:relative;
-}
-
-/* sun */
-
+.header-icon{width:36px;height:36px;position:relative;}
 .sun{
-    border:3px solid #dcecff;
-    border-radius:50%;
-    width:20px;
-    height:20px;
-    position:absolute;
-    top:11px;
-    left:11px;
-    box-shadow:0 0 8px rgba(150,210,255,.5);
+    border:3px solid #dcecff;border-radius:50%;width:18px;height:18px;position:absolute;top:9px;left:9px;box-shadow:0 0 8px rgba(150,210,255,.5);
 }
-
-.sun::before,
-.sun::after{
-    content:"";
-    position:absolute;
-    inset:-11px;
-    border:2px solid transparent;
-    border-top-color:#dcecff;
-    border-bottom-color:#dcecff;
+.sun::before,.sun::after{
+    content:"";position:absolute;inset:-9px;border:2px solid transparent;border-top-color:#dcecff;border-bottom-color:#dcecff;
 }
-
-.sun::after{
-    transform:rotate(90deg);
-}
-
-/* user */
-
+.sun::after{transform:rotate(90deg);}
 .user-icon{
-    width:22px;
-    height:22px;
-    border:3px solid #dcecff;
-    border-radius:50%;
-    position:absolute;
-    left:10px;
-    top:3px;
+    width:18px;height:18px;border:3px solid #dcecff;border-radius:50%;position:absolute;left:9px;top:3px;
 }
-
 .user-icon::after{
-    content:"";
-    position:absolute;
-    width:34px;
-    height:18px;
-    left:-9px;
-    top:25px;
-    border:3px solid #dcecff;
-    border-bottom:0;
-    border-radius:22px 22px 0 0;
+    content:"";position:absolute;width:28px;height:15px;left:-8px;top:20px;border:3px solid #dcecff;border-bottom:0;border-radius:18px 18px 0 0;
 }
-
-/* ================= 3D LOGO ================= */
-
 .logo-area{
-    position:relative;
-    width:min(570px,70vw);
-    height:190px;
-    perspective:1000px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
+    position:relative;width:min(480px,80vw);height:140px;display:flex;justify-content:center;align-items:center;
 }
-
-.logo{
-    position:relative;
-    text-align:center;
-    transform-style:preserve-3d;
-    animation:logoFloat 4s ease-in-out infinite;
-}
-
+.logo{position:relative;text-align:center;}
 .logo-line{
-    display:block;
-    position:relative;
-    font-family:"Bowlby One",Impact,sans-serif;
-    font-size:clamp(42px,7vw,82px);
-    line-height:.9;
-    letter-spacing:-2px;
-    font-weight:400;
-    white-space:nowrap;
+    display:block;position:relative;font-family:"Bowlby One",Impact,sans-serif;font-size:clamp(32px,6vw,52px);line-height:1;letter-spacing:-1px;font-weight:400;white-space:nowrap;
 }
-
-/* first line */
-
 .logo-line:first-child{
-    background:linear-gradient(
-        180deg,
-        #ffffff 0%,
-        #d9f0ff 30%,
-        #66bfff 60%,
-        #007cff 100%
-    );
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
-
-    -webkit-text-stroke:2px #bce8ff;
-
-    text-shadow:
-        0 0 3px #fff,
-        0 0 8px #fff,
-        0 0 18px #008cff,
-        0 0 35px #008cff;
+    background:linear-gradient(180deg,#ffffff 0%,#d9f0ff 30%,#66bfff 60%,#007cff 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:1.5px #bce8ff;
+    text-shadow:0 0 3px #fff,0 0 8px #fff,0 0 15px #008cff;
 }
-
-/* second line */
-
 .logo-line:last-child{
-    margin-top:5px;
-
-    background:linear-gradient(
-        180deg,
-        #ffffff 0%,
-        #b8e8ff 28%,
-        #00baff 60%,
-        #0068ff 100%
-    );
-
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
-
-    -webkit-text-stroke:2px #80dcff;
-
-    text-shadow:
-        0 0 3px #fff,
-        0 0 9px #00d0ff,
-        0 0 20px #008cff,
-        0 0 35px #0066ff;
+    margin-top:2px;
+    background:linear-gradient(180deg,#ffffff 0%,#b8e8ff 28%,#00baff 60%,#0068ff 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-stroke:1.5px #80dcff;
+    text-shadow:0 0 3px #fff,0 0 8px #00d0ff,0 0 18px #008cff;
 }
-
-/* crown */
-
 .crown{
-    position:absolute;
-    top:-48px;
-    left:50%;
-    transform:translateX(-50%);
-    font-size:48px;
-    color:#28b9ff;
-    text-shadow:
-        0 0 5px #fff,
-        0 0 12px #00aaff,
-        0 0 30px #008cff;
-    animation:crownGlow 2s ease-in-out infinite alternate;
+    position:absolute;top:-36px;left:50%;transform:translateX(-50%);font-size:36px;color:#28b9ff;
+    text-shadow:0 0 5px #fff,0 0 12px #00aaff;
 }
-
-/* logo side wings */
-
-.wing{
-    position:absolute;
-    top:47px;
-    width:105px;
-    height:80px;
-}
-
-.wing.left{
-    left:-120px;
-    transform:skewX(-15deg);
-}
-
-.wing.right{
-    right:-120px;
-    transform:scaleX(-1) skewX(-15deg);
-}
-
-.wing::before,
-.wing::after{
-    content:"";
-    position:absolute;
-    height:5px;
-    border-radius:10px;
-    background:linear-gradient(90deg,transparent,#25cfff,#fff);
-    box-shadow:
-        0 0 7px #00baff,
-        0 0 18px #008cff;
-}
-
-.wing::before{
-    width:100px;
-    top:8px;
-    right:0;
-    transform:rotate(45deg);
-}
-
-.wing::after{
-    width:76px;
-    top:39px;
-    right:9px;
-    transform:rotate(55deg);
-}
-
-/* bottom neon line */
-
 .logo-line-glow{
-    position:absolute;
-    bottom:0;
-    left:50%;
-    transform:translateX(-50%);
-    width:390px;
-    max-width:70vw;
-    height:3px;
-    background:linear-gradient(
-        90deg,
-        transparent,
-        #007aff,
-        #fff,
-        #00baff,
-        transparent
-    );
-
-    box-shadow:
-        0 0 5px #00aaff,
-        0 0 15px #008cff,
-        0 0 30px #006cff;
-
-    animation:linePulse 2.5s ease-in-out infinite;
+    position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:280px;max-width:70vw;height:3px;
+    background:linear-gradient(90deg,transparent,#007aff,#fff,#00baff,transparent);
+    box-shadow:0 0 5px #00aaff,0 0 15px #008cff;
 }
-
-/* ================= CONTENT ================= */
-
-.container{
-    width:min(900px,calc(100% - 120px));
-    margin:0 auto;
-}
-
-/* buttons */
-
-.quick-links{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:25px 36px;
-    margin-bottom:34px;
-}
-
+.container{width:min(900px,calc(100% - 80px));margin:0 auto;}
+.quick-links{display:grid;grid-template-columns:1fr 1fr;gap:20px 24px;margin-bottom:30px;}
 .quick-btn{
-    min-height:98px;
-    border-radius:24px;
-    display:flex;
-    align-items:center;
-    justify-content:flex-start;
-    padding:0 48px;
-    gap:25px;
-    color:#fff;
-    text-decoration:none;
-    font-size:30px;
-    font-weight:700;
-
-    border:2px solid rgba(255,255,255,.35);
-
-    box-shadow:
-        inset 0 0 20px rgba(255,255,255,.10),
-        0 0 12px rgba(0,100,255,.45);
-
-    transition:
-        transform .2s ease,
-        filter .2s ease;
+    min-height:85px;border-radius:20px;display:flex;align-items:center;justify-content:flex-start;padding:0 35px;gap:20px;
+    color:#fff;text-decoration:none;font-size:26px;font-weight:700;border:2px solid rgba(255,255,255,.35);
+    box-shadow:inset 0 0 20px rgba(255,255,255,.10),0 0 12px rgba(0,100,255,.45);
 }
-
-.quick-btn:hover{
-    transform:translateY(-3px) scale(1.01);
-    filter:brightness(1.12);
-}
-
-.discord{
-    background:linear-gradient(135deg,#5865f2,#2749dc);
-    box-shadow:
-        0 0 12px #4265ff,
-        inset 0 0 25px rgba(255,255,255,.12);
-}
-
-.reddit{
-    background:linear-gradient(135deg,#ff5b16,#ff3200);
-    box-shadow:
-        0 0 12px #ff5425,
-        inset 0 0 25px rgba(255,255,255,.10);
-}
-
-.nebulo{
-    background:linear-gradient(135deg,#9753ff,#6828dc);
-    box-shadow:
-        0 0 12px #8e46ff,
-        inset 0 0 25px rgba(255,255,255,.10);
-}
-
-.donations{
-    background:linear-gradient(135deg,#52c557,#16a934);
-    box-shadow:
-        0 0 12px #25d94c,
-        inset 0 0 25px rgba(255,255,255,.10);
-}
-
-.btn-icon{
-    font-size:43px;
-    width:48px;
-    text-align:center;
-}
-
-/* ================= TRENDING ================= */
-
-.section-title{
-    position:relative;
-    font-size:38px;
-    font-weight:800;
-    margin:12px 0 40px;
-    padding-bottom:14px;
-}
-
+.discord{background:linear-gradient(135deg,#5865f2,#2749dc);box-shadow:0 0 12px #4265ff;}
+.reddit{background:linear-gradient(135deg,#ff5b16,#ff3200);box-shadow:0 0 12px #ff5425;}
+.nebulo{background:linear-gradient(135deg,#9753ff,#6828dc);box-shadow:0 0 12px #8e46ff;}
+.donations{background:linear-gradient(135deg,#52c557,#16a934);box-shadow:0 0 12px #25d94c;}
+.btn-icon{font-size:36px;width:40px;text-align:center;}
+.section-title{position:relative;font-size:32px;font-weight:800;margin:10px 0 30px;padding-bottom:12px;}
 .section-title::after{
-    content:"";
-    position:absolute;
-    left:0;
-    bottom:0;
-    width:370px;
-    max-width:65%;
-    height:4px;
-
-    background:linear-gradient(
-        90deg,
-        #00aaff,
-        #08cfff,
-        transparent
-    );
-
-    box-shadow:
-        0 0 6px #00baff,
-        0 0 15px #008cff;
+    content:"";position:absolute;left:0;bottom:0;width:300px;max-width:65%;height:4px;
+    background:linear-gradient(90deg,#00aaff,#08cfff,transparent);box-shadow:0 0 6px #00baff;
 }
-
-.section-title::before{
-    content:"🎮";
-    margin-right:20px;
-    font-size:38px;
-}
-
-/* games grid */
-
-.games-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:36px;
-    padding-bottom:70px;
-}
-
+.section-title::before{content:"🎮";margin-right:15px;font-size:32px;}
+.games-grid{display:grid;grid-template-columns:1fr 1fr;gap:28px;padding-bottom:60px;}
 .game-card{
-    position:relative;
-    min-width:0;
-    overflow:hidden;
-    border-radius:22px;
-
-    background:#030b18;
-
-    border:2px solid #064cae;
-
-    box-shadow:
-        0 0 5px rgba(0,102,255,.6),
-        inset 0 0 20px rgba(0,80,255,.05);
-
-    transition:
-        transform .2s ease,
-        box-shadow .2s ease;
+    position:relative;min-width:0;overflow:hidden;border-radius:20px;background:#030b18;border:2px solid #064cae;
+    box-shadow:0 0 5px rgba(0,102,255,.6);
 }
-
-.game-card:hover{
-    transform:translateY(-5px);
-
-    box-shadow:
-        0 0 10px #008cff,
-        0 0 25px rgba(0,130,255,.35);
-}
-
-.game-image{
-    position:relative;
-    width:100%;
-    aspect-ratio:1.45 / 1;
-    overflow:hidden;
-}
-
-.game-image img{
-    width:100%;
-    height:100%;
-    display:block;
-    object-fit:cover;
-}
-
+.game-image{position:relative;width:100%;aspect-ratio:1.45 / 1;overflow:hidden;}
+.game-image img{width:100%;height:100%;display:block;object-fit:cover;}
 .game-image::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:linear-gradient(
-        to bottom,
-        transparent 45%,
-        rgba(0,0,0,.15) 60%,
-        rgba(0,0,0,.88) 100%
-    );
+    content:"";position:absolute;inset:0;background:linear-gradient(to bottom,transparent 45%,rgba(0,0,0,.15) 60%,rgba(0,0,0,.88) 100%);
 }
-
-/* version badge */
-
 .version{
-    position:absolute;
-    right:14px;
-    top:13px;
-    z-index:5;
-
-    background:#00d84f;
-    color:white;
-
-    padding:10px 18px;
-    border-radius:10px;
-
-    font-size:20px;
-    font-weight:800;
-
-    box-shadow:
-        0 0 10px rgba(0,255,100,.45);
+    position:absolute;right:12px;top:12px;z-index:5;background:#00d84f;color:white;padding:8px 14px;border-radius:8px;font-size:18px;font-weight:800;
+    box-shadow:0 0 10px rgba(0,255,100,.45);
 }
-
-/* game information */
-
-.game-info{
-    position:relative;
-    margin-top:-90px;
-    z-index:4;
-    padding:70px 28px 25px;
-}
-
-.category{
-    font-size:18px;
-    letter-spacing:2px;
-    color:#c8d1dc;
-    margin-bottom:12px;
-}
-
-.game-title{
-    font-size:26px;
-    line-height:1.15;
-    font-weight:800;
-    margin-bottom:12px;
-}
-
-.game-meta{
-    display:flex;
-    gap:20px;
-    font-size:21px;
-    color:#d7dde6;
-}
-
-/* ================= ANIMATIONS ================= */
-
-@keyframes logoFloat{
-    0%,100%{
-        transform:translateY(0) rotateX(0deg);
-    }
-    50%{
-        transform:translateY(-5px) rotateX(2deg);
-    }
-}
-
-@keyframes crownGlow{
-    from{
-        filter:brightness(1);
-    }
-    to{
-        filter:brightness(1.6);
-    }
-}
-
-@keyframes linePulse{
-    0%,100%{
-        opacity:.65;
-        transform:translateX(-50%) scaleX(.9);
-    }
-    50%{
-        opacity:1;
-        transform:translateX(-50%) scaleX(1);
-    }
-}
-
-/* ================= MOBILE ================= */
+.game-info{position:relative;margin-top:-80px;z-index:4;padding:60px 24px 22px;}
+.category{font-size:16px;letter-spacing:2px;color:#c8d1dc;margin-bottom:10px;}
+.game-title{font-size:24px;line-height:1.15;font-weight:800;margin-bottom:10px;}
+.game-meta{display:flex;gap:16px;font-size:18px;color:#d7dde6;}
 
 @media(max-width:700px){
-
-    .top-header{
-        min-height:260px;
-        padding-top:35px;
-    }
-
-    .menu-btn{
-        left:45px;
-        top:73px;
-        width:39px;
-        height:35px;
-    }
-
-    .menu-btn span{
-        width:39px;
-        height:3px;
-    }
-
-    .header-icons{
-        right:38px;
-        top:65px;
-        gap:22px;
-    }
-
-    .header-icon{
-        transform:scale(.85);
-    }
-
-    .logo-area{
-        width:70vw;
-        height:175px;
-    }
-
-    .logo-line{
-        font-size:clamp(36px,8vw,60px);
-        letter-spacing:-1px;
-    }
-
-    .crown{
-        font-size:35px;
-        top:-37px;
-    }
-
-    .wing{
-        transform:scale(.7) skewX(-15deg);
-    }
-
-    .wing.left{
-        left:-100px;
-    }
-
-    .wing.right{
-        right:-100px;
-    }
-
-    .logo-line-glow{
-        width:320px;
-    }
-
-    .container{
-        width:calc(100% - 90px);
-    }
-
-    .quick-links{
-        gap:22px 22px;
-    }
-
-    .quick-btn{
-        min-height:80px;
-        border-radius:19px;
-        padding:0 25px;
-        gap:14px;
-        font-size:22px;
-    }
-
-    .btn-icon{
-        font-size:31px;
-        width:36px;
-    }
-
-    .section-title{
-        font-size:30px;
-        margin-bottom:30px;
-    }
-
-    .section-title::before{
-        font-size:29px;
-        margin-right:12px;
-    }
-
-    .games-grid{
-        gap:22px;
-    }
-
-    .version{
-        font-size:14px;
-        padding:7px 10px;
-        right:8px;
-        top:8px;
-    }
-
-    .game-info{
-        padding:55px 16px 17px;
-        margin-top:-75px;
-    }
-
-    .category{
-        font-size:13px;
-        margin-bottom:8px;
-    }
-
-    .game-title{
-        font-size:19px;
-    }
-
-    .game-meta{
-        font-size:15px;
-        gap:12px;
-    }
-}
-
-@media(max-width:470px){
-
-    .top-header{
-        min-height:230px;
-    }
-
-    .menu-btn{
-        left:28px;
-        top:72px;
-    }
-
-    .header-icons{
-        right:25px;
-        gap:14px;
-    }
-
-    .logo-area{
-        width:64vw;
-        height:155px;
-    }
-
-    .logo-line{
-        font-size:31px;
-    }
-
-    .crown{
-        font-size:29px;
-        top:-31px;
-    }
-
-    .wing{
-        display:none;
-    }
-
-    .logo-line-glow{
-        width:250px;
-    }
-
-    .container{
-        width:calc(100% - 45px);
-    }
-
-    .quick-links{
-        gap:16px 14px;
-    }
-
-    .quick-btn{
-        min-height:67px;
-        padding:0 12px;
-        gap:8px;
-        border-radius:15px;
-        font-size:15px;
-    }
-
-    .btn-icon{
-        font-size:23px;
-        width:27px;
-    }
-
-    .section-title{
-        font-size:24px;
-    }
-
-    .games-grid{
-        gap:16px;
-    }
-
-    .game-title{
-        font-size:16px;
-    }
-
-    .game-meta{
-        font-size:13px;
-    }
+    .container{width:calc(100% - 40px);}
+    .quick-links{grid-template-columns:1fr;gap:16px;}
+    .quick-btn{min-height:75px;font-size:22px;padding:0 25px;}
+    .games-grid{grid-template-columns:1fr;gap:20px;}
+    .logo-line{font-size:clamp(28px,7vw,42px);}
 }
 </style>
 </head>
-
 <body>
-
-<!-- ================= HEADER ================= -->
-
 <header class="top-header">
-
-    <!-- MENU -->
-    <div class="menu-btn">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
-
-    <!-- LOGO -->
+    <div class="menu-btn"><span></span><span></span><span></span></div>
     <div class="logo-area">
-
         <div class="logo">
-
             <div class="crown">♛</div>
-
-            <div class="wing left"></div>
-            <div class="wing right"></div>
-
             <span class="logo-line">KARTIK</span>
             <span class="logo-line">KAMBOJ</span>
-
         </div>
-
         <div class="logo-line-glow"></div>
-
     </div>
-
-    <!-- RIGHT ICONS -->
     <div class="header-icons">
-
-        <div class="header-icon">
-            <div class="sun"></div>
-        </div>
-
-        <div class="header-icon">
-            <div class="user-icon"></div>
-        </div>
-
+        <div class="header-icon"><div class="sun"></div></div>
+        <div class="header-icon"><div class="user-icon"></div></div>
     </div>
-
 </header>
-
-
-<!-- ================= MAIN ================= -->
-
 <main class="container">
-
-    <!-- QUICK LINKS -->
-
     <section class="quick-links">
-
-        <a href="#" class="quick-btn discord">
-            <span class="btn-icon">🎮</span>
-            <span>Discord</span>
-        </a>
-
-        <a href="#" class="quick-btn reddit">
-            <span class="btn-icon">●</span>
-            <span>Reddit</span>
-        </a>
-
-        <a href="#" class="quick-btn nebulo">
-            <span class="btn-icon">♧</span>
-            <span>Nebulo</span>
-        </a>
-
-        <a href="#" class="quick-btn donations">
-            <span class="btn-icon">$</span>
-            <span>Donations</span>
-        </a>
-
+        <a href="#" class="quick-btn discord"><span class="btn-icon">🎮</span><span>Discord</span></a>
+        <a href="#" class="quick-btn reddit"><span class="btn-icon">●</span><span>Reddit</span></a>
+        <a href="#" class="quick-btn nebulo"><span class="btn-icon">♧</span><span>Nebulo</span></a>
+        <a href="#" class="quick-btn donations"><span class="btn-icon">$</span><span>Donations</span></a>
     </section>
-
-
-    <!-- TRENDING -->
-
-    <h2 class="section-title">
-        Trending Games
-    </h2>
-
-
-    <!-- GAMES -->
-
+    <h2 class="section-title">Trending Games</h2>
     <section class="games-grid">
-
-        <!-- GAME 1 -->
-
         <article class="game-card">
-
             <div class="game-image">
-
                 <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?w=600&auto=format&fit=crop&q=60" alt="Nivalis Nights">
-
-                <span class="version">
-                    B 25603526
-                </span>
-
+                <span class="version">B 25603526</span>
             </div>
-
             <div class="game-info">
-
-                <div class="category">
-                    ADVENTURE
-                </div>
-
-                <h3 class="game-title">
-                    Nivalis Nights
-                </h3>
-
-                <div class="game-meta">
-                    <span>2026</span>
-                    <span>|</span>
-                    <span>16.8 GB</span>
-                </div>
-
+                <div class="category">ADVENTURE</div>
+                <h3 class="game-title">Nivalis Nights</h3>
+                <div class="game-meta"><span>2026</span><span>|</span><span>16.8 GB</span></div>
             </div>
-
         </article>
-
-
-        <!-- GAME 2 -->
-
         <article class="game-card">
-
             <div class="game-image">
-
                 <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&auto=format&fit=crop&q=60" alt="Minecraft Dungeons II">
-
-                <span class="version">
-                    V 1.1.1.0
-                </span>
-
+                <span class="version">V 1.1.1.0</span>
             </div>
-
             <div class="game-info">
-
-                <div class="category">
-                    ACTION
-                </div>
-
-                <h3 class="game-title">
-                    Minecraft Dungeons II
-                </h3>
-
-                <div class="game-meta">
-                    <span>2026</span>
-                    <span>|</span>
-                    <span>8.7 GB</span>
-                </div>
-
+                <div class="category">ACTION</div>
+                <h3 class="game-title">Minecraft Dungeons II</h3>
+                <div class="game-meta"><span>2026</span><span>|</span><span>8.7 GB</span></div>
             </div>
-
         </article>
-
-
-        <!-- GAME 3 -->
-
-        <article class="game-card">
-
-            <div class="game-image">
-
-                <img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?w=600&auto=format&fit=crop&q=60" alt="Transport Fever 3">
-
-                <span class="version">
-                    V 40408
-                </span>
-
-            </div>
-
-            <div class="game-info">
-
-                <div class="category">
-                    SIMULATION
-                </div>
-
-                <h3 class="game-title">
-                    Transport Fever 3
-                </h3>
-
-                <div class="game-meta">
-                    <span>2026</span>
-                    <span>|</span>
-                    <span>32.3 GB</span>
-                </div>
-
-            </div>
-
-        </article>
-
-
-        <!-- GAME 4 -->
-
-        <article class="game-card">
-
-            <div class="game-image">
-
-                <img src="https://images.unsplash.com/photo-1612287233202-b51d3ed6173c?w=600&auto=format&fit=crop&q=60" alt="Deskrawl Idle ARPG">
-
-                <span class="version">
-                    V 1.0.0g
-                </span>
-
-            </div>
-
-            <div class="game-info">
-
-                <div class="category">
-                    ACTION
-                </div>
-
-                <h3 class="game-title">
-                    Deskrawl: Idle ARPG
-                </h3>
-
-                <div class="game-meta">
-                    <span>2026</span>
-                    <span>|</span>
-                    <span>1.4 GB</span>
-                </div>
-
-            </div>
-
-        </article>
-
     </section>
-
 </main>
-
 </body>
 </html>
